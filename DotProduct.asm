@@ -112,7 +112,43 @@ input_array_function:
 # The dot product result should be stored in $v0. 
 # Remeber to preserve registers as needed																			
 DotProduct:			
+	#push - DotProduct:
+	addi $sp, $sp, -4	#move the stack pointer down
+	sw $ra, 0($sp)		#store line 44 into the stack
+	li $v0, 0		#int $v0 = 0;
+	#end push -DotProduct
 
+	li $t0, 0		#int $t0 = i = 0 (our iterator)	
+	for_loop_dotProduct:
+	beq $t0, $a2, exit_for_loop_dotProduct	#if i == size of array, exit loop
+	
+	addi $t1, $a0, 0	#temporarily Save $a0 to $t1
+	addi $t2, $a1, 0	#temporarily save $a1 to $t2
+	addi $t5, $v0, 0	#temporarily Save our return value ($v0) into $t5
+	addi $t6, $t0, 0	#temporarily Save our i (iterator) ($t0) into $t6
+	
+	sll $t3, $t0, 2		#multiply i by 4 and save it to $t3
+	add $a0, $t1, $t3	#get the address of V1[i] save it to $a0
+	add $a1, $t2, $t3	#get the address of V2[i] save it to $a1
+	
+	lw $a0, 0($a0)		#store the VALUE of V1[i] into $a0
+	lw $a1, 0($a1)		#store the VALUE of V2[i] into $a1
+	jal Multiply		#will store the result into $v0, overwriting our previous $v0 so...
+	
+	addi $t0, $t6, 0	# restore our i (iterator) ($t6) back into $t0
+	add $v0, $v0, $t5 	# add result ($t5) and return of Multiply() ($v0) store into $v0
+	addi $a0, $t1, 0	#restore saved value of $a0
+	addi $a1, $t2, 0	# restore saved values of $a1
+	
+	addi $t0, $t0, 1	# i++
+	j for_loop_dotProduct	# loop
+	exit_for_loop_dotProduct:
+	
+	#pop - DotProduct
+	lw $ra, 0($sp)	#restore the last added address in the stack to $ra, (4)
+	addi $sp, $sp, 4 # move the stack pointer up
+	#end_pop	
+	jr $ra		
 
 
 # This function does the same thing as the function Multiply() in the C++ program
@@ -124,6 +160,46 @@ DotProduct:
 # Remeber to preserve registers as needed	
 Multiply:
 
-			
+	#push - Multiply:
+	addi $sp, $sp, -4	#move the stack pointer down
+	sw $ra, 0($sp)		#store line x into the stack
+	li $v0, 0		#int $v0 = 0;
+	#end_push - Multiply
+	
+	li $t0, 0		#int $t0 = i = 0 (our iterator)
+	for_loop_Multiply:
+	beq $t0, $a1, exit_for_loop_Multiply	#if i == b ($a1), exit loop
+	add $v0, $v0, $a0 	# result = result ($v0) + a ($a0)
 
-
+	addi $t0, $t0, 1	# i++
+	j for_loop_Multiply	# loop
+	
+	exit_for_loop_Multiply:
+	
+	#pop - Multiply
+	lw $ra, 0($sp)	#restore the last added address in the stack to $ra, 
+	addi $sp, $sp, 4 # move the stack pointer up
+	#end_pop
+	jr $ra #will jump to line $ra
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
