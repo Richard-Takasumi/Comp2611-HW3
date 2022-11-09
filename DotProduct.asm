@@ -140,6 +140,9 @@ DotProduct:
 	addi $a0, $t1, 0	#restore saved value of $a0
 	addi $a1, $t2, 0	# restore saved values of $a1
 	
+	#I KNOW I SHOULDN'T SAVE INTO TEMP REGISTERS but I only realized this after
+	# sorry
+
 	addi $t0, $t0, 1	# i++
 	j for_loop_dotProduct	# loop
 	exit_for_loop_dotProduct:
